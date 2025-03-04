@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+void main() {
+    int n, b[10], w[10], i, j, t, tt;
+    int a[10], p[10];
+    float avg = 0;
+
+    printf("\n\tPRIORITY SCHEDULING ALGORITHM");
+    printf("\n\t*****************************************************\n");
+
+    printf("\nEnter the number of processes: ");
+    scanf("%d", &n);
+
+    printf("\nEnter burst time & priority for each process...\n");
+    for (i = 0; i < n; i++) {
+        printf("\nProcess %d: ", i + 1);
+        scanf("%d %d", &b[i], &p[i]);
+        a[i] = i + 1; // Process ID
+    }
+
+    for (i = 0; i < n; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (p[i] < p[j]) { // Change to '>' if lower numbers indicate higher priority
+                t = b[i]; tt = a[i];
+                b[i] = b[j]; a[i] = a[j];
+                b[j] = t;     a[j] = tt;
+            }
+        }
+    }
+
+    w[0] = 0; // First process has no waiting time
+    printf("\nProcess %d waiting time is 0", a[0]);
+
+    for (i = 1; i < n; i++) {
+        w[i] = b[i - 1] + w[i - 1];
+        printf("\nProcess %d waiting time: %d", a[i], w[i]);
+        avg += w[i];
+    }
+
+    printf("\n\nTotal waiting time: %.2f", avg);
+    printf("\nAverage waiting time: %.2f\n", avg / n);
+
+    // Gantt Chart
+    printf("\nGantt Chart\n***************************************\n\n\t|");
+    for (i = 0; i < n; i++) {
+        printf(" P%d |", a[i]);
+    }
+    printf("\n");
+
+    // Completion times
+    printf("\t0");
+    for (i = 0; i < n; i++) {
+        printf("   %d", w[i] + b[i]);
+    }
+    printf("\n");
+}
